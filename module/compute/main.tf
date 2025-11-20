@@ -1,3 +1,14 @@
+terraform {
+  required_version = ">=1.0.0"
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 6.0" # Or whatever version you are currently building on
+    }
+  }
+}
+
+
 resource "google_compute_instance" "vm" {
   name         = var.instance_name
   machine_type = var.machine_type
@@ -5,12 +16,12 @@ resource "google_compute_instance" "vm" {
 
   boot_disk {
     initialize_params {
-      image = var.boot_image
+      image = var.image
     }
   }
 
   network_interface {
-    network = default
+    network = "default"
     access_config {} # this apparently gives external IP
   }
 
