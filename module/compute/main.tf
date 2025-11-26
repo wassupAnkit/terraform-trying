@@ -1,14 +1,3 @@
-terraform {
-  required_version = ">=1.0.0"
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "~> 6.0" # Or whatever version you are currently building on
-    }
-  }
-}
-
-
 resource "google_compute_instance" "vm" {
   name         = var.instance_name
   machine_type = var.machine_type
@@ -20,10 +9,15 @@ resource "google_compute_instance" "vm" {
     }
   }
 
-  network_interface {
-    network = "default"
-    access_config {} # this apparently gives external IP
-  }
+network_interface {
+  # subnet_self_link must be passed from root module
+  subnetwork = var.subnet_self_link
 
-  metadata_startup_script = var.startup_script
+  access_config {}  # Required to assign public IP
 }
+
+metadata = {
+  startup-script = var.startup_script
+}
+}
+
